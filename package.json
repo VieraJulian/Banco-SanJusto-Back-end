@@ -19,6 +19,7 @@
     "sequelize-cli": "^6.5.1"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "mysql2": "^2.3.3",
     "sequelize": "^6.25.1"
   }

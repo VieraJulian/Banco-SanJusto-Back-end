@@ -12,10 +12,10 @@ module.exports = {
           type: Sequelize.INTEGER
         },
         number: {
-          type: Sequelize.INTEGER
+          type: Sequelize.BIGINT
         },
         pin: {
-          type: Sequelize.INTEGER
+          type: Sequelize.TEXT
         },
         total: {
           type: Sequelize.INTEGER
