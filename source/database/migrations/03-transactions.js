@@ -17,8 +17,11 @@ module.exports = {
         total: {
           type: Sequelize.INTEGER
         },
+        date: {
+          type: Sequelize.DATE
+        },
         numberTransaction: {
-          type: Sequelize.INTEGER
+          type: Sequelize.BIGINT
         }
       });
     } catch (error) {
