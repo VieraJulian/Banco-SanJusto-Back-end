@@ -1,8 +1,16 @@
 const { user } = require("../database/models/index");
+const { validationResult } = require('express-validator');
 
 module.exports = {
     access: async (req, res) => {
         try {
+            let validaciones = validationResult(req);
+            let { errors } = validaciones
+
+            if (errors && errors.length > 0) {
+                return res.status(200).json(errors);
+            };
+
             let users = await user.findAll({
                 include: {
                     all: true
@@ -27,3 +35,5 @@ module.exports = {
         }
     }
 }
+
+// Mejorar código
