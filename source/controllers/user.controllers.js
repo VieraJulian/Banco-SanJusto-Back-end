@@ -1,5 +1,6 @@
-const { user } = require("../database/models/index");
+const { user, card } = require("../database/models/index");
 const { validationResult } = require('express-validator');
+const { compareSync, hashSync } = require("bcryptjs");
 
 module.exports = {
     access: async (req, res) => {
@@ -29,11 +30,18 @@ module.exports = {
                 })
             });
 
-            return res.status(200).json(userDB);
+            let data = {}
+            data.id = userDB.id
+            data.name = userDB.name
+            data.cards = userDB.cards.map(card => Object({
+                id: card.id,
+                number: card.number,
+                total: card.total
+            }));
+
+            return res.status(200).json(data);
         } catch (error) {
             return res.status(500).json(error);
         }
     }
 }
-
-// Mejorar código

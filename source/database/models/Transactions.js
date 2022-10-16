@@ -29,11 +29,11 @@ module.exports = (sequelize, DataTypes) => {
     const transaction = sequelize.define(alias, cols, config)
 
     transaction.associate = function (models) {
-        transaction.belongsToMany(models.user, {
-            as: "users",
-            through: "userstransactions",
+        transaction.belongsToMany(models.card, {
+            as: "cards",
+            through: "cardstransactions",
             foreignKey: "transactions_id",
-            otherKey: "user_id",
+            otherKey: "card_id",
             timestamps: false
         })
 

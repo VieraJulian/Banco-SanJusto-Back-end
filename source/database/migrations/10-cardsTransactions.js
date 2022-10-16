@@ -4,17 +4,17 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     try {
-      await queryInterface.createTable('usersTransactions', {
+      await queryInterface.createTable('cardsTransactions', {
         id: {
           allowNull: false,
           autoIncrement: true,
           primaryKey: true,
           type: Sequelize.INTEGER
         },
-        user_id: {
+        card_id: {
           type: Sequelize.INTEGER,
           references: {
-            model: "users",
+            model: "cards",
             key: "id"
           }
         },
@@ -33,7 +33,7 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     try {
-      await queryInterface.dropTable('usersTransactions');
+      await queryInterface.dropTable('cardsTransactions');
     } catch (error) {
       console.log(error)
     }

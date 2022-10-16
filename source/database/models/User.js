@@ -26,14 +26,7 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: "user_id",
             otherKey: "card_id",
             timestamps: false
-        }),
-        user.belongsToMany(models.transaction, {
-            as: "transactions",
-            through: "userstransactions",
-            foreignKey: "user_id",
-            otherKey: "transactions_id",
-            timestamps: false
-        });
+        })
     }
 
     return user
