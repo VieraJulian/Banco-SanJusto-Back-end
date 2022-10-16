@@ -1,6 +1,5 @@
 const { user, card } = require("../database/models/index");
 const { validationResult } = require('express-validator');
-const { compareSync, hashSync } = require("bcryptjs");
 
 module.exports = {
     access: async (req, res) => {
@@ -42,6 +41,35 @@ module.exports = {
             return res.status(200).json(data);
         } catch (error) {
             return res.status(500).json(error);
+        }
+    },
+
+    transaction: async (req, res) => {
+        try {
+            req.params.id = parseInt(req.params.id)
+
+            let cards = await card.findAll({
+                include: {
+                    all: true
+                }
+            })
+
+            let cardDB = cards.find(card => card.number === req.params.id)
+
+            let data = {}
+            data.cardId = cardDB.id
+            data.cardNumber = cardDB.number
+            data.transactions = cardDB.transactions.map(t => Object({
+                id: t.id,
+                addresse: t.addresse,
+                total: t.total,
+                date: t.date,
+                numberTransaction: t.numberTransaction
+            }))
+
+            return res.status(200).json(data)
+        } catch (error) {
+            return res.status(500).json(error)
         }
     }
 }
