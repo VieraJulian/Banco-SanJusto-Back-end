@@ -6,9 +6,14 @@ module.exports = {
         try {
             let validaciones = validationResult(req);
             let { errors } = validaciones
+            let errorMsg = errors.map(e => Object({
+                param: e.param,
+                value: e.value,
+                msg: e.msg
+            }))
 
             if (errors && errors.length > 0) {
-                return res.status(200).json(errors);
+                return res.status(200).json(errorMsg);
             };
 
             let users = await user.findAll({

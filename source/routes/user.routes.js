@@ -5,6 +5,6 @@ const middlewareLogin = require("../middlewares/login.middlewares")
 const { access, transaction } = require("../controllers/user.controllers")
 
 router.post("/login", middlewareLogin, access);
-router.get("/card/transactions/:id", transaction)
+router.get("/card/:id/transactions", transaction)
 
 module.exports = router
