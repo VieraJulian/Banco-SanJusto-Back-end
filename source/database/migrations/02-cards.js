@@ -18,7 +18,7 @@ module.exports = {
           type: Sequelize.TEXT
         },
         total: {
-          type: Sequelize.INTEGER
+          type: Sequelize.DECIMAL(18, 2)
         }
       });
     } catch (error) {

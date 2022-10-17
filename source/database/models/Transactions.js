@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING
         },
         total: {
-            type: DataTypes.INTEGER
+            type: DataTypes.DECIMAL(18, 2)
         },
         date: {
             type: DataTypes.DATE
