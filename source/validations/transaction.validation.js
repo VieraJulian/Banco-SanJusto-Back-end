@@ -1,5 +1,5 @@
 const { body } = require("express-validator");
-const { user, card } = require("../database/models/index");
+const { card } = require("../database/models/index");
 
 const transaction = [
     body("number").notEmpty().withMessage("Debes ingresar un número de tarjeta").bail().isNumeric().withMessage("No se permiten letras").bail().isLength({ min: 16 }).withMessage("Debes ingresar un número correcto").bail().isLength({ max: 16 }).withMessage("Debes ingresar un número correcto").bail().custom( async (value, { req }) => {
@@ -7,30 +7,33 @@ const transaction = [
         
         let cards = await card.findAll()
 
+        let cardSender = cards.find(card => card.number === req.session.user.cardRegister.number)
         let cardDB = cards.find(card => card.number === req.body.number);
 
         if (!cardDB) {
             throw new Error("Número no registrado")
         }
 
+        if (req.body.number === cardSender.number) {
+            throw new Error("No puedes utilizar tu tarjeta")
+        }
+
         return true
     }),
 
-    body("pin").notEmpty().withMessage("Debes ingresar tú pin").bail().isNumeric().withMessage("No se permiten letras").bail().isLength({ min: 4 }).withMessage("Debes ingresar un número de cuatro dígitos").bail().isLength({ max: 4 }).withMessage("Debes ingresar un número de cuatro dígitos").bail().custom(async (value, { req }) => {
-        req.body.number = parseInt(req.body.number)
-
+    body("total").notEmpty().withMessage("Debes ingresar un monto").bail().isNumeric().withMessage("No se permiten letras").bail().custom(async (value, { req }) => {
         let cards = await card.findAll()
+        let cardDB = cards.find(card => card.number === req.session.user.cardRegister.number)
 
-        let cardDB = cards.find(card => card.number === req.body.number);
-
-        if (!cardDB) {
-            throw new Error("Usuario no encontrado")
+        if (value <=  0) {
+            throw new Error("aaa")
         }
 
-        if (!compareSync(value, cardDB.pin)) {
-            throw new Error("El pin es incorrecto")
-        }
 
+        if (value > cardDB.total) {
+            throw new Error("No tienes suficiente dinero")
+        }
+        
         return true
 
     })
