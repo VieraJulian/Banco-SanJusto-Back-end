@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT
         },
         total: {
-            type: DataTypes.DECIMAL(18, 2)
+            type: DataTypes.FLOAT(18, 2)
         }
     };
     let config = {

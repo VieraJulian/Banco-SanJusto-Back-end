@@ -47,13 +47,13 @@ module.exports = {
             let cardDB = cards.find(card => card.number === req.body.number)
             let newTransaction = await transaction.create({
                 addresse: `${cardDB.users[0].name}`,
-                total: req.body.total,
+                total: Number(req.body.total),
                 date: now,
                 numberTransaction: uniqueSuffix
             })
 
             let addCardTransaction = await cardDB.addTransaction(newTransaction)
-            console.log(req.session.user)
+            
             return res.status(200).json(newTransaction)
         } catch (error) {
             return res.status(500).json(error)
