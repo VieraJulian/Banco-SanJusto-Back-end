@@ -1,4 +1,4 @@
-const { user } = require("../database/models/index");
+const { user, card } = require("../database/models/index");
 const { validationResult } = require('express-validator');
 
 module.exports = {
@@ -16,13 +16,21 @@ module.exports = {
                 return res.status(200).json(errorMsg);
             };
 
+            req.body.number = parseInt(req.body.number);
+
+            let cards = await card.findAll({
+                include: {
+                    all: true
+                }
+            })
+
+            let cardDB = cards.find(card => card.number === req.body.number)
+
             let users = await user.findAll({
                 include: {
                     all: true
                 }
             });
-
-            req.body.number = parseInt(req.body.number);
 
             let userDB;
 
@@ -37,23 +45,18 @@ module.exports = {
             let data = {}
             data.id = userDB.id
             data.name = userDB.name
-            data.cards = userDB.cards.map(card => Object({
+            data.cardRegister = {
+                id: cardDB.id,
+                number: cardDB.number,
+                total: cardDB.total
+            }
+            data.othersCards = userDB.cards.filter(card => card.id !== cardDB.id).map(card => Object({
                 id: card.id,
                 number: card.number,
                 total: card.total
-            }));
+            }))
 
-            if (userDB) {
-                let userSession = {};
-                userSession.id = userDB.id;
-                userSession.name = userDB.name,
-                userSession.cards = userDB.cards.map(card => Object({
-                    id: card.id,
-                    number: card.number,
-                    total: card.total
-                }));
-                req.session.user = userSession
-            }
+            req.session.user = data
 
             return res.status(200).json(data);
         } catch (error) {

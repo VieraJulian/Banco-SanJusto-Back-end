@@ -53,7 +53,7 @@ module.exports = {
             })
 
             let addCardTransaction = await cardDB.addTransaction(newTransaction)
-            
+            console.log(req.session.user)
             return res.status(200).json(newTransaction)
         } catch (error) {
             return res.status(500).json(error)
