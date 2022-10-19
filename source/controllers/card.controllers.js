@@ -1,5 +1,6 @@
-const { card, transaction } = require("../database/models/index");
+const { user, card, transaction } = require("../database/models/index");
 const { validationResult } = require('express-validator');
+const { hashSync } = require("bcryptjs")
 const moment = require("moment/moment");
 
 module.exports = {
@@ -80,14 +81,53 @@ module.exports = {
                 addresse: `${cardAddresse.users[0].name}`,
                 total: Number(req.body.total),
                 date: now,
-                numberTransaction: uniqueSuffix 
+                numberTransaction: uniqueSuffix
             })
 
             let addCardTransaction = await cardSender.addTransaction(newTransaction)
-            
+
             req.session.user.cardRegister.total = cardSender.total - Number(req.body.total)
-            console.log(req.session.user)
+
             return res.status(200).json(newTransaction)
+        } catch (error) {
+            return res.status(500).json(error)
+        }
+    },
+
+    addCard: async (req, res) => {
+        try {
+            let validaciones = validationResult(req);
+            let { errors } = validaciones
+            let errorMsg = errors.map(e => Object({
+                param: e.param,
+                value: e.value,
+                msg: e.msg
+            }))
+
+            if (errors && errors.length > 0) {
+                return res.status(200).json(errorMsg);
+            };
+
+            req.body.number = parseInt(req.body.number)
+
+            let min = 20
+            let max = 100000
+            
+            let newCard = await card.create({
+                number: req.body.number,
+                pin: hashSync(req.body.pin, 10),
+                total: Math.floor(Math.random() * (max - min + 1) + min)
+            })
+
+            let userLogin = await user.findOne({
+                where: {
+                    name: req.session.user.name
+                }
+            })
+            
+            await userLogin.addCard(newCard)
+
+            return res.status(200).json(newCard)
         } catch (error) {
             return res.status(500).json(error)
         }
