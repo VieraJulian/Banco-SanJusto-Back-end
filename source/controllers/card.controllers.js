@@ -21,7 +21,7 @@ module.exports = {
             data.transactions = cardDB.transactions.map(t => Object({
                 id: t.id,
                 addresse: t.addresse,
-                total: t.total,
+                total: Number(t.total),
                 date: t.date,
                 numberTransaction: t.numberTransaction
             }))
@@ -51,23 +51,42 @@ module.exports = {
             const now = moment().format("YYYY/MM/DD HH:mm:ss")
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
 
-            let cards = await card.findAll({ // trae todas las trajetas
+            let cards = await card.findAll({
                 include: {
                     all: true
                 }
             });
 
             let cardSender = cards.find(card => card.number === req.session.user.cardRegister.number)
-            let cardAddresse = cards.find(card => card.number === req.body.number) // tarjeta del destinatario, a quien se le envia dinero
+            let cardAddresse = cards.find(card => card.number === req.body.number)
+
+            await card.update({
+                total: cardSender.total - Number(req.body.total)
+            }, {
+                where: {
+                    id: cardSender.id
+                }
+            })
+
+            await card.update({
+                total: cardAddresse.total + Number(req.body.total)
+            }, {
+                where: {
+                    id: cardAddresse.id
+                }
+            })
+
             let newTransaction = await transaction.create({
                 addresse: `${cardAddresse.users[0].name}`,
                 total: Number(req.body.total),
                 date: now,
-                numberTransaction: uniqueSuffix //  se crea la transacción
+                numberTransaction: uniqueSuffix 
             })
 
-            let addCardTransaction = await cardSender.addTransaction(newTransaction) // se actualiza la tabla intermedia
+            let addCardTransaction = await cardSender.addTransaction(newTransaction)
             
+            req.session.user.cardRegister.total = cardSender.total - Number(req.body.total)
+            console.log(req.session.user)
             return res.status(200).json(newTransaction)
         } catch (error) {
             return res.status(500).json(error)
