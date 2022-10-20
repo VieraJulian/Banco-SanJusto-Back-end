@@ -112,7 +112,7 @@ module.exports = {
 
             let min = 20
             let max = 100000
-            
+
             let newCard = await card.create({
                 number: req.body.number,
                 pin: hashSync(req.body.pin, 10),
@@ -124,7 +124,7 @@ module.exports = {
                     name: req.session.user.name
                 }
             })
-            
+
             await userLogin.addCard(newCard)
 
             return res.status(200).json(newCard)

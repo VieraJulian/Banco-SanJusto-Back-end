@@ -17,7 +17,7 @@ const addCard = [
             }
         })
 
-        if (req.session && req.session.user.othersCards.length > 2) {
+        if (req.session && req.session.user.othersCards.length > 1) {
             throw new Error("No puedes agregar más tarjetas")
         }
 
