@@ -49,7 +49,7 @@ module.exports = {
                 id: card.id,
                 number: card.number,
                 total: card.total,
-                cardRegister : card.id === cardDB.id ? 1 : 0
+                cardRegister: card.id === cardDB.id ? 1 : 0
             }))
 
             req.session.user = data

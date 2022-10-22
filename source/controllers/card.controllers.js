@@ -127,6 +127,13 @@ module.exports = {
 
             await userLogin.addCard(newCard)
 
+            req.session.user.cards.push({
+                id: newCard.id,
+                number: newCard.number,
+                total: newCard.total,
+                cardRegister: 0
+            })
+
             return res.status(200).json(newCard)
         } catch (error) {
             return res.status(500).json(error)
