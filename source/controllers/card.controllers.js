@@ -26,7 +26,7 @@ module.exports = {
                 date: t.date,
                 numberTransaction: t.numberTransaction
             }))
-
+            
             return res.status(200).json(data)
         } catch (error) {
             return res.status(500).json(error)
@@ -58,9 +58,9 @@ module.exports = {
                 }
             });
 
-            let cardSender = cards.find(card => card.number === req.session.user.cardRegister.number)
+            let numberRegister = req.session.user.cards.filter(card => card.cardRegister === 1)
+            let cardSender = cards.find(card => card.number === numberRegister[0].number)
             let cardAddresse = cards.find(card => card.number === req.body.number)
-
             await card.update({
                 total: cardSender.total - Number(req.body.total)
             }, {
@@ -86,7 +86,7 @@ module.exports = {
 
             let addCardTransaction = await cardSender.addTransaction(newTransaction)
 
-            req.session.user.cardRegister.total = cardSender.total - Number(req.body.total)
+            numberRegister[0].total = cardSender.total - Number(req.body.total)
 
             return res.status(200).json(newTransaction)
         } catch (error) {

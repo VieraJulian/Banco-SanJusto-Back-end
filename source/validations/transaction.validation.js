@@ -6,10 +6,10 @@ const transaction = [
         req.body.number = parseInt(req.body.number)
         
         let cards = await card.findAll()
-
-        let cardSender = cards.find(card => card.number === req.session.user.cardRegister.number)
+        
+        let cardSender = req.session.user.cards.find(card => card.cardRegister === 1)
+       
         let cardDB = cards.find(card => card.number === req.body.number);
-
         if (!cardDB) {
             throw new Error("Número no registrado")
         }
@@ -23,14 +23,14 @@ const transaction = [
 
     body("total").notEmpty().withMessage("Debes ingresar un monto").bail().isNumeric().withMessage("No se permiten letras").bail().custom(async (value, { req }) => {
         let cards = await card.findAll()
-        let cardDB = cards.find(card => card.number === req.session.user.cardRegister.number)
+        let cardSender = req.session.user.cards.find(card => card.cardRegister === 1)
 
         if (value <=  0) {
-            throw new Error("aaa")
+            throw new Error("Ingrese un numero mayor a cero")
         }
 
 
-        if (value > cardDB.total) {
+        if (value > cardSender.total) {
             throw new Error("No tienes suficiente dinero")
         }
         
