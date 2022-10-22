@@ -26,7 +26,7 @@ module.exports = {
                 date: t.date,
                 numberTransaction: t.numberTransaction
             }))
-            
+
             return res.status(200).json(data)
         } catch (error) {
             return res.status(500).json(error)
@@ -49,6 +49,7 @@ module.exports = {
 
             req.body.number = parseInt(req.body.number)
             req.body.total = (Number(req.body.total)).toFixed(2)
+            req.params.id = parseInt(req.params.id)
             const now = moment().format("YYYY/MM/DD HH:mm:ss")
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
 
@@ -58,9 +59,9 @@ module.exports = {
                 }
             });
 
-            let numberRegister = req.session.user.cards.filter(card => card.cardRegister === 1)
-            let cardSender = cards.find(card => card.number === numberRegister[0].number)
+            let cardSender = cards.find(card => card.number === req.params.id)
             let cardAddresse = cards.find(card => card.number === req.body.number)
+
             await card.update({
                 total: cardSender.total - Number(req.body.total)
             }, {
@@ -86,7 +87,14 @@ module.exports = {
 
             let addCardTransaction = await cardSender.addTransaction(newTransaction)
 
-            numberRegister[0].total = cardSender.total - Number(req.body.total)
+
+            req.session.user.cards = req.session.user.cards.map(card => Object({
+                ...card, total: card.id === cardSender.id ? cardSender.total - Number(req.body.total) : card.total
+            }));
+
+            req.session.user.cards = req.session.user.cards.map(card => Object({
+                ...card, total: card.id === cardAddresse.id ? cardAddresse.total + Number(req.body.total) : card.total
+            }))
 
             return res.status(200).json(newTransaction)
         } catch (error) {

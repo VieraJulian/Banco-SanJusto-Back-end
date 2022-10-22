@@ -6,7 +6,7 @@ const middlewareCardTransaction = require("../middlewares/transactions.middlewar
 const middlewareAddCard = require("../middlewares/addCard.middlewares")
 
 router.get("/:id/transactions", cardTransactions)
-router.post("/transaction", middlewareCardTransaction, transaction)
+router.post("/:id/newTransaction", middlewareCardTransaction, transaction)
 router.post("/add", middlewareAddCard, addCard)
 
 module.exports = router

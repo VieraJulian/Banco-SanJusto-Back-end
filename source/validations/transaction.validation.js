@@ -4,10 +4,11 @@ const { card } = require("../database/models/index");
 const transaction = [
     body("number").notEmpty().withMessage("Debes ingresar un número de tarjeta").bail().isNumeric().withMessage("No se permiten letras").bail().isLength({ min: 16 }).withMessage("Debes ingresar un número correcto").bail().isLength({ max: 16 }).withMessage("Debes ingresar un número correcto").bail().custom( async (value, { req }) => {
         req.body.number = parseInt(req.body.number)
+        req.params.id = parseInt(req.params.id)
         
         let cards = await card.findAll()
         
-        let cardSender = req.session.user.cards.find(card => card.cardRegister === 1)
+        let cardSender = cards.find(card => card.number === req.params.id)
        
         let cardDB = cards.find(card => card.number === req.body.number);
         if (!cardDB) {
@@ -22,9 +23,10 @@ const transaction = [
     }),
 
     body("total").notEmpty().withMessage("Debes ingresar un monto").bail().isNumeric().withMessage("No se permiten letras").bail().custom(async (value, { req }) => {
-        let cards = await card.findAll()
-        let cardSender = req.session.user.cards.find(card => card.cardRegister === 1)
-
+        let cards = await card.findAll();
+        req.params.id = parseInt(req.params.id)
+        
+        let cardSender = cards.find(card => card.number === req.params.id)
         if (value <=  0) {
             throw new Error("Ingrese un numero mayor a cero")
         }
