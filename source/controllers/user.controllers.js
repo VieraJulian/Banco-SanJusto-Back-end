@@ -45,15 +45,11 @@ module.exports = {
             let data = {}
             data.id = userDB.id
             data.name = userDB.name
-            data.cardRegister = {
-                id: cardDB.id,
-                number: cardDB.number,
-                total: cardDB.total
-            }
-            data.othersCards = userDB.cards.filter(card => card.id !== cardDB.id).map(card => Object({
+            data.cards = userDB.cards.map(card => Object({
                 id: card.id,
                 number: card.number,
-                total: card.total
+                total: card.total,
+                cardRegister : card.id === cardDB.id ? 1 : 0
             }))
 
             req.session.user = data
