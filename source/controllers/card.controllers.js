@@ -127,22 +127,32 @@ module.exports = {
                 total: Math.floor(Math.random() * (max - min + 1) + min)
             })
 
+            let userCard = await card.findOne({
+                include: {
+                    all:true
+                }, where: {
+                    number: req.body.userCard
+                }
+            })
+
+            let idUser = userCard.dataValues.users[0].dataValues.id
+            
             let userLogin = await user.findOne({
                 where: {
-                    name: req.session.user.name
+                    id: idUser
                 }
             })
 
             await userLogin.addCard(newCard)
 
-            req.session.user.cards.push({
+            let cardNewUser = ({
                 id: newCard.id,
                 number: newCard.number,
                 total: newCard.total,
                 cardRegister: 0
             })
 
-            return res.status(200).json(newCard)
+            return res.status(200).json(cardNewUser)
         } catch (error) {
             return res.status(500).json(error)
         }
