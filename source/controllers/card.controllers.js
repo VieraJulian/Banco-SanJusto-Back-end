@@ -19,13 +19,16 @@ module.exports = {
             let data = {}
             data.cardId = cardDB.id
             data.cardNumber = cardDB.number
-            data.transactions = cardDB.transactions.map(t => Object({
+            let transactions = cardDB.transactions.map(t => Object({
                 id: t.id,
                 addresse: t.addresse,
                 total: Number(t.total),
                 date: t.date,
                 numberTransaction: t.numberTransaction
             }))
+            let transactionsOrder = []
+            transactions.map(t => transactionsOrder.unshift(t))
+            data.transactions = transactionsOrder
 
             return res.status(200).json(data)
         } catch (error) {
@@ -86,7 +89,6 @@ module.exports = {
             })
 
             let addCardTransaction = await cardSender.addTransaction(newTransaction)
-
 
             req.session.user.cards = req.session.user.cards.map(card => Object({
                 ...card, total: card.id === cardSender.id ? cardSender.total - Number(req.body.total) : card.total

@@ -7,21 +7,21 @@ const addCard = [
 
         let cards = await card.findAll()
 
-        /* req.session.user.cards.forEach(card => {
-            if (value === card.number) {
-                throw new Error("Ya tienes esta tarjeta registrada")
-            }
-        })
-        
         cards.forEach(card => {
             if (card.number === value) {
                 throw new Error("Número de tarjeta registrado")
             }
         })
 
-        if (req.session && req.session.user.cards.length > 2) {
+        /* if (req.session && req.session.user.cards.length > 2) {
             throw new Error("No puedes agregar más tarjetas")
         } */
+
+        /* req.session.user.cards.forEach(card => {
+            if (value === card.number) {
+                throw new Error("Ya tienes esta tarjeta registrada")
+            }
+        }) */
 
         return true
     }),
