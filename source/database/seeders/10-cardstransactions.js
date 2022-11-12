@@ -20,13 +20,13 @@ module.exports = {
         {
           card_id: 1,
           transactions_id: 4
-        },{
+        }, {
           card_id: 1,
           transactions_id: 5
-        },{
+        }, {
           card_id: 1,
           transactions_id: 6
-        },{
+        }, {
           card_id: 1,
           transactions_id: 7
         }

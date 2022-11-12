@@ -131,14 +131,14 @@ module.exports = {
 
             let userCard = await card.findOne({
                 include: {
-                    all:true
+                    all: true
                 }, where: {
                     number: req.body.userCard
                 }
             })
 
             let idUser = userCard.dataValues.users[0].dataValues.id
-            
+
             let userLogin = await user.findOne({
                 where: {
                     id: idUser

@@ -3,9 +3,9 @@ const { user, card } = require("../database/models/index");
 const { compareSync } = require("bcryptjs");
 
 const login = [
-    body("number").notEmpty().withMessage("Debes ingresar tú número de tarjeta").bail().isNumeric().withMessage("No se permiten letras").bail().isLength({ min: 16 }).withMessage("Debes ingresar un número correcto").bail().isLength({ max: 16 }).withMessage("Debes ingresar un número correcto").bail().custom( async (value, { req }) => {
+    body("number").notEmpty().withMessage("Debes ingresar tú número de tarjeta").bail().isNumeric().withMessage("No se permiten letras").bail().isLength({ min: 16 }).withMessage("Debes ingresar un número correcto").bail().isLength({ max: 16 }).withMessage("Debes ingresar un número correcto").bail().custom(async (value, { req }) => {
         req.body.number = parseInt(req.body.number)
-        
+
         let cards = await card.findAll()
 
         let cardDB = cards.find(card => card.number === req.body.number);

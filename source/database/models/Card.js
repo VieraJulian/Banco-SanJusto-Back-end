@@ -33,13 +33,13 @@ module.exports = (sequelize, DataTypes) => {
             otherKey: "user_id",
             timestamps: false
         }),
-        card.belongsToMany(models.transaction, {
-            as: "transactions",
-            through: "cardstransactions",
-            foreignKey: "card_id",
-            otherKey: "transactions_id",
-            timestamps: false
-        });
+            card.belongsToMany(models.transaction, {
+                as: "transactions",
+                through: "cardstransactions",
+                foreignKey: "card_id",
+                otherKey: "transactions_id",
+                timestamps: false
+            });
     }
 
     return card
